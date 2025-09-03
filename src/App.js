@@ -323,7 +323,7 @@ function App() {
                 style={{
                   width: 500,
                   maxWidth: "95vw",
-                  background: "#fff",
+                  background: "#F8FAFC",
                   borderRadius: 18,
                   boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
                   padding: "2.5rem 2rem",
@@ -895,6 +895,22 @@ function App() {
                     <option value="rounded">Rounded</option>
                     {/* <option value="dots">Dots</option> */}
                   </select>
+                </div>
+                <div className="container-fluid">
+                  <div className="row">
+                    <div className="col-md-12 text-center">
+                      For Feedback/Suggestions email at{" "}
+                      <a
+                        href="mailto:arorag2577@gmail.com"
+                        style={{
+                          color: "#007bff",
+                          textDecoration: "underline",
+                        }}
+                      >
+                        arorag2577@gmail.com
+                      </a>
+                    </div>
+                  </div>
                 </div>
                 {/* You can add more advanced options here if needed */}
               </div>
