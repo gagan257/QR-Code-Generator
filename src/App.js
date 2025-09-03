@@ -90,7 +90,7 @@ function App() {
     <div
       className="min-vh-100 d-flex align-items-center justify-content-center"
       style={{
-        background: "#f4f6fb",
+        // background: "red",
         minHeight: "100vh",
         padding: 0,
       }}
@@ -100,7 +100,7 @@ function App() {
         style={{
           width: "100vw",
           height: "100vh",
-          background: "#fff",
+          background: "#212121",
           borderRadius: 0,
           boxShadow: "none",
           padding: 0,
@@ -112,11 +112,11 @@ function App() {
           <div className="row g-0" style={{ height: "100vh" }}>
             {/* History Tab */}
             <div
-              className="col-12 col-md-3 d-none d-md-flex flex-column align-items-start justify-content-start"
+              className="col-12 col-md-3 d-none d-md-flex flex-column align-items-start justify-content-start shadow-lg"
               style={{
-                background: "#f8fafc",
+                background: "#181818",
                 minHeight: "100vh",
-                borderRight: "1px solid #e2e8f0",
+                // borderRight: "1px solid #e2e8f0",
                 padding: "2.5rem 1rem 2.5rem 2rem",
                 maxWidth: 260,
               }}
@@ -133,7 +133,7 @@ function App() {
                   <span
                     style={{
                       fontWeight: 600,
-                      color: "#495057",
+                      color: "white",
                       fontSize: "1.1rem",
                       display: "flex",
                       alignItems: "center",
@@ -158,7 +158,7 @@ function App() {
                         fill="currentColor"
                         viewBox="0 0 16 16"
                       >
-                        <circle cx="8" cy="8" r="8" fill="#e9ecef" />
+                        <circle cx="8" cy="8" r="8" fill="#303030" />
                         <text
                           x="8"
                           y="12"
@@ -208,7 +208,7 @@ function App() {
                   >
                     <div
                       style={{
-                        background: "#fff",
+                        background: "#303030",
                         borderRadius: 10,
                         boxShadow: "0 4px 24px rgba(0,0,0,0.12)",
                         padding: "2rem 2.5rem",
@@ -249,13 +249,14 @@ function App() {
                           fontWeight: 600,
                           fontSize: "1.1rem",
                           marginBottom: 8,
+                          color: "white",
                         }}
                       >
-                        About QR History
+                        <b>About QR History</b>
                       </div>
                       <div
                         style={{
-                          color: "#495057",
+                          color: "white",
                           fontSize: "1rem",
                           marginBottom: 16,
                         }}
@@ -287,15 +288,17 @@ function App() {
                     {history.map((item, idx) => (
                       <button
                         key={item + idx}
-                        className="btn btn-sm btn-light text-start"
+                        className="btn btn-sm text-start"
                         style={{
-                          border: "1px solid #e2e8f0",
+                          border: "1px solid #303030",
+                          backgroundColor: "#303030",
                           borderRadius: 6,
                           marginBottom: 2,
                           maxWidth: "100%",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
                           whiteSpace: "nowrap",
+                          color: "white",
                         }}
                         title={item}
                         onClick={() => {
@@ -323,18 +326,19 @@ function App() {
                 style={{
                   width: 500,
                   maxWidth: "95vw",
-                  background: "#F8FAFC",
+                  background: "#181818",
                   borderRadius: 18,
-                  boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
+                  // boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
                   padding: "2.5rem 2rem",
                 }}
+                className="shadow-lg"
               >
                 <div className="row text-center mt-3 mb-4">
                   <div className="col-md-12">
                     <h4
                       style={{
                         fontWeight: 700,
-                        color: "#2d3748",
+                        color: "white",
                         display: "inline-flex",
                         alignItems: "center",
                         gap: 8,
@@ -373,16 +377,16 @@ function App() {
                         </svg>
                       </span>
                     </h4>
-                    <div style={{ fontSize: "0.95rem", color: "#6c757d" }}>
-                      by{" "}
+                    <div style={{ color: "white" }}>
+                      <span style={{ fontSize: "0.95rem" }}> by </span>
                       <a
                         href="https://gagan-redirect.netlify.app"
                         style={{
-                          color: "#007bff",
+                          color: "white",
                           textDecoration: "underline",
                         }}
                       >
-                        Gagan Arora
+                        <b>Gagan Arora</b>
                       </a>
                     </div>
                   </div>
@@ -487,11 +491,12 @@ function App() {
                       onChange={(e) => setInputValue(e.target.value)}
                       placeholder="Paste Link to Generate QR code"
                       style={{
-                        background: "#f8fafc",
-                        border: "1px solid #e2e8f0",
-                        borderRadius: 8,
+                        background: "#303030",
+                        border: "1px solid #303030",
+                        borderRadius: 100,
                         padding: "0.75rem",
                         fontSize: "1rem",
+                        color: "white",
                       }}
                     />
                   </div>
@@ -534,13 +539,13 @@ function App() {
                 >
                   <div
                     ref={qrRef}
-                    className="d-flex justify-content-center align-items-center"
+                    className="d-flex justify-content-center align-items-center shadow-lg"
                     style={{
                       width: size,
                       height: size,
-                      background: "#f8fafc",
+                      background: "#F6F6F6",
                       borderRadius: 16,
-                      boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+                      // boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
                       margin: "0 auto",
                     }}
                   >
@@ -584,7 +589,7 @@ function App() {
             <div
               className="col-12 col-md-6 d-flex flex-column align-items-center justify-content-center"
               style={{
-                background: "#fff",
+                background: "#171717",
                 minHeight: "100vh",
                 padding: "2.5rem 2rem",
                 borderRight: "1px solid #e2e8f0",
@@ -595,7 +600,7 @@ function App() {
                   <h4
                     style={{
                       fontWeight: 700,
-                      color: "#2d3748",
+                      color: "white",
                       display: "inline-flex",
                       alignItems: "center",
                       gap: 8,
@@ -634,13 +639,13 @@ function App() {
                       </svg>
                     </span>
                   </h4>
-                  <div style={{ fontSize: "0.95rem", color: "#6c757d" }}>
+                  <div style={{ fontSize: "0.95rem", color: "white" }}>
                     by{" "}
                     <a
                       href="https://gagan-redirect.netlify.app"
-                      style={{ color: "#007bff", textDecoration: "underline" }}
+                      style={{ color: "white", textDecoration: "underline" }}
                     >
-                      Gagan Arora
+                      <b>Gagan Arora</b>
                     </a>
                   </div>
                 </div>
@@ -812,9 +817,9 @@ function App() {
             </div>
             {/* Right half: Additional options */}
             <div
-              className="col-12 col-md-6 d-flex flex-column align-items-center justify-content-center"
+              className="col-12 col-md-6 d-flex flex-column align-items-center justify-content-center shadow-lg"
               style={{
-                background: "#f8fafc",
+                background: "#212121",
                 minHeight: "100vh",
                 padding: "2.5rem 2rem",
               }}
