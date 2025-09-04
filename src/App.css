@@ -1,3 +1,7 @@
 .qr-container {
   border: 1px solid #000;
 }
+
+input::placeholder {
+  color: #8f8f8f !important;
+}

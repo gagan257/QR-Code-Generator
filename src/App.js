@@ -12,6 +12,8 @@ function App() {
   const [value, setValue] = useState(); // value to generate QR
   const [showHistoryInfo, setShowHistoryInfo] = useState(false);
   const [showHowToInfo, setShowHowToInfo] = useState(false);
+  const [popupAnim, setPopupAnim] = useState(""); // for popup animation
+  const [sectionAnim, setSectionAnim] = useState("section-in"); // for section animation
   const qrRef = useRef();
 
   // Load history from localStorage on mount
@@ -32,6 +34,30 @@ function App() {
       });
     }
   }, [value]);
+
+  // Animate section open/close
+  useEffect(() => {
+    if (showDetails) {
+      setSectionAnim("section-in");
+    } else {
+      setSectionAnim("section-out");
+      // After animation, reset to in for next open
+      setTimeout(() => setSectionAnim("section-in"), 400);
+    }
+  }, [showDetails]);
+
+  // Helper to show popup with animation
+  const openPopup = (setter) => {
+    setter(true);
+    setPopupAnim("popup-in");
+  };
+  const closePopup = (setter) => {
+    setPopupAnim("popup-out");
+    setTimeout(() => {
+      setter(false);
+      setPopupAnim("");
+    }, 300);
+  };
 
   // Helper to get QR props based on design
   const getQRProps = () => {
@@ -87,16 +113,47 @@ function App() {
   };
 
   return (
-    <div
-      className="min-vh-100 d-flex align-items-center justify-content-center"
-      style={{
-        // background: "red",
-        minHeight: "100vh",
-        padding: 0,
-      }}
-    >
+    <>
+      {/* Animation CSS */}
+      <style>{`
+        .fade-bg {
+          animation: fadeInBg 0.3s;
+        }
+        @keyframes fadeInBg {
+          from { background: rgba(0,0,0,0); }
+          to { background: rgba(0,0,0,0.25); }
+        }
+        .popup-in {
+          animation: popupIn 0.3s cubic-bezier(.4,0,.2,1);
+        }
+        .popup-out {
+          animation: popupOut 0.3s cubic-bezier(.4,0,.2,1) forwards;
+        }
+        @keyframes popupIn {
+          from { opacity: 0; transform: scale(0.92) translateY(30px);}
+          to { opacity: 1; transform: scale(1) translateY(0);}
+        }
+        @keyframes popupOut {
+          from { opacity: 1; transform: scale(1) translateY(0);}
+          to { opacity: 0; transform: scale(0.92) translateY(30px);}
+        }
+        .section-in {
+          animation: sectionIn 0.4s cubic-bezier(.4,0,.2,1);
+        }
+        .section-out {
+          animation: sectionOut 0.4s cubic-bezier(.4,0,.2,1);
+        }
+        @keyframes sectionIn {
+          from { opacity: 0; transform: translateY(40px);}
+          to { opacity: 1; transform: translateY(0);}
+        }
+        @keyframes sectionOut {
+          from { opacity: 1; transform: translateY(0);}
+          to { opacity: 0; transform: translateY(40px);}
+        }
+      `}</style>
       <div
-        className="container-fluid"
+        className={`container-fluid ${sectionAnim}`}
         style={{
           width: "100vw",
           height: "100vh",
@@ -109,7 +166,7 @@ function App() {
       >
         {!showDetails ? (
           // Layout with history tab on the left and main content on the right
-          <div className="row g-0" style={{ height: "100vh" }}>
+          <div className={`row g-0 ${sectionAnim}`} style={{ height: "100vh" }}>
             {/* History Tab */}
             <div
               className="col-12 col-md-3 d-none d-md-flex flex-column align-items-start justify-content-start shadow-lg"
@@ -150,7 +207,7 @@ function App() {
                         alignItems: "center",
                       }}
                       title="About History"
-                      onClick={() => setShowHistoryInfo(true)}
+                      onClick={() => openPopup(setShowHistoryInfo)}
                     >
                       <svg
                         width="18"
@@ -185,6 +242,7 @@ function App() {
                         localStorage.removeItem("qr_history");
                       }}
                     >
+                      <i className="fa fa-trash me-1"></i>
                       Delete
                     </button>
                   )}
@@ -192,6 +250,7 @@ function App() {
                 {/* Info Popup */}
                 {showHistoryInfo && (
                   <div
+                    className="fade-bg"
                     style={{
                       position: "fixed",
                       top: 0,
@@ -204,9 +263,10 @@ function App() {
                       alignItems: "center",
                       justifyContent: "center",
                     }}
-                    onClick={() => setShowHistoryInfo(false)}
+                    onClick={() => closePopup(setShowHistoryInfo)}
                   >
                     <div
+                      className={popupAnim}
                       style={{
                         background: "#303030",
                         borderRadius: 10,
@@ -268,8 +328,9 @@ function App() {
                       <button
                         className="btn btn-sm btn-primary"
                         style={{ borderRadius: 6, padding: "4px 18px" }}
-                        onClick={() => setShowHistoryInfo(false)}
+                        onClick={() => closePopup(setShowHistoryInfo)}
                       >
+                        <i className="fa fa-check me-1"></i>
                         OK
                       </button>
                     </div>
@@ -355,7 +416,7 @@ function App() {
                           alignItems: "center",
                         }}
                         title="How to use"
-                        onClick={() => setShowHowToInfo(true)}
+                        onClick={() => openPopup(setShowHowToInfo)}
                       >
                         <svg
                           width="18"
@@ -380,7 +441,7 @@ function App() {
                     <div style={{ color: "white" }}>
                       <span style={{ fontSize: "0.95rem" }}> by </span>
                       <a
-                        href="https://gagan-redirect.netlify.app"
+                        href="https://github.com/gagan257"
                         style={{
                           color: "white",
                           textDecoration: "underline",
@@ -394,6 +455,7 @@ function App() {
                 {/* How To Use Popup */}
                 {showHowToInfo && (
                   <div
+                    className="fade-bg"
                     style={{
                       position: "fixed",
                       top: 0,
@@ -406,11 +468,12 @@ function App() {
                       alignItems: "center",
                       justifyContent: "center",
                     }}
-                    onClick={() => setShowHowToInfo(false)}
+                    onClick={() => closePopup(setShowHowToInfo)}
                   >
                     <div
+                      className={popupAnim}
                       style={{
-                        background: "#fff",
+                        background: "#303030",
                         borderRadius: 10,
                         boxShadow: "0 4px 24px rgba(0,0,0,0.12)",
                         padding: "2rem 2.5rem",
@@ -451,15 +514,17 @@ function App() {
                           fontWeight: 600,
                           fontSize: "1.1rem",
                           marginBottom: 8,
+                          color: "white",
                         }}
                       >
-                        How to use
+                        <b>How to use</b>
                       </div>
                       <div
                         style={{
                           color: "#495057",
                           fontSize: "1rem",
                           marginBottom: 16,
+                          color: "white",
                         }}
                       >
                         1. Paste a link or text in the input box.
@@ -475,8 +540,9 @@ function App() {
                       <button
                         className="btn btn-sm btn-primary"
                         style={{ borderRadius: 6, padding: "4px 18px" }}
-                        onClick={() => setShowHowToInfo(false)}
+                        onClick={() => closePopup(setShowHowToInfo)}
                       >
+                        <i className="fa fa-check me-1"></i>
                         OK
                       </button>
                     </div>
@@ -484,12 +550,15 @@ function App() {
                 )}
                 <div className="row mt-3 mb-2">
                   <div className="col-md-12">
+                    <p className="text-white text-center mt-2">
+                      Paste Link to Generate QR code
+                    </p>
                     <input
                       className="w-100 form-control"
                       type="text"
                       value={inputValue}
                       onChange={(e) => setInputValue(e.target.value)}
-                      placeholder="Paste Link to Generate QR code"
+                      // placeholder="Paste Link to Generate QR code"
                       style={{
                         background: "#303030",
                         border: "1px solid #303030",
@@ -497,6 +566,7 @@ function App() {
                         padding: "0.75rem",
                         fontSize: "1rem",
                         color: "white",
+                        "::placeholder": { color: "#8F8F8F" },
                       }}
                     />
                   </div>
@@ -516,6 +586,7 @@ function App() {
                         }
                       }}
                     >
+                      <i className="fa fa-qrcode me-2"></i>
                       Generate QR Code
                     </button>
                   </div>
@@ -529,6 +600,7 @@ function App() {
                       }}
                       onClick={() => setShowDetails(true)}
                     >
+                      <i className="fa fa-sliders me-2"></i>
                       Additional Details
                     </button>
                   </div>
@@ -574,6 +646,7 @@ function App() {
                         }}
                         onClick={handleDownload}
                       >
+                        <i className="fa fa-download me-2"></i>
                         Download as PNG
                       </button>
                     </div>
@@ -584,7 +657,7 @@ function App() {
           </div>
         ) : (
           // Two columns when showing details (hide history tab)
-          <div className="row g-0" style={{ height: "100vh" }}>
+          <div className={`row g-0 ${sectionAnim}`} style={{ height: "100vh" }}>
             {/* Left half: QR code and value input */}
             <div
               className="col-12 col-md-6 d-flex flex-column align-items-center justify-content-center"
@@ -617,7 +690,7 @@ function App() {
                         alignItems: "center",
                       }}
                       title="How to use"
-                      onClick={() => setShowHowToInfo(true)}
+                      onClick={() => openPopup(setShowHowToInfo)}
                     >
                       <svg
                         width="18"
@@ -642,7 +715,7 @@ function App() {
                   <div style={{ fontSize: "0.95rem", color: "white" }}>
                     by{" "}
                     <a
-                      href="https://gagan-redirect.netlify.app"
+                      href="https://github.com/gagan257"
                       style={{ color: "white", textDecoration: "underline" }}
                     >
                       <b>Gagan Arora</b>
@@ -652,6 +725,7 @@ function App() {
                 {/* How To Use Popup */}
                 {showHowToInfo && (
                   <div
+                    className="fade-bg"
                     style={{
                       position: "fixed",
                       top: 0,
@@ -664,11 +738,12 @@ function App() {
                       alignItems: "center",
                       justifyContent: "center",
                     }}
-                    onClick={() => setShowHowToInfo(false)}
+                    onClick={() => closePopup(setShowHowToInfo)}
                   >
                     <div
+                      className={popupAnim}
                       style={{
-                        background: "#fff",
+                        background: "#303030",
                         borderRadius: 10,
                         boxShadow: "0 4px 24px rgba(0,0,0,0.12)",
                         padding: "2rem 2.5rem",
@@ -709,6 +784,7 @@ function App() {
                           fontWeight: 600,
                           fontSize: "1.1rem",
                           marginBottom: 8,
+                          color: "white",
                         }}
                       >
                         How to use
@@ -718,6 +794,7 @@ function App() {
                           color: "#495057",
                           fontSize: "1rem",
                           marginBottom: 16,
+                          color: "white",
                         }}
                       >
                         1. Paste a link or text in the input box.
@@ -733,25 +810,28 @@ function App() {
                       <button
                         className="btn btn-sm btn-primary"
                         style={{ borderRadius: 6, padding: "4px 18px" }}
-                        onClick={() => setShowHowToInfo(false)}
+                        onClick={() => closePopup(setShowHowToInfo)}
                       >
+                        <i className="fa fa-check me-1"></i>
                         OK
                       </button>
                     </div>
                   </div>
                 )}
                 <input
-                  className="w-100 form-control mb-3"
+                  className="w-100 mb-3"
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Paste Link to Generate QR code"
+                  // placeholder="Paste Link to Generate QR code"
                   style={{
-                    background: "#f8fafc",
-                    border: "1px solid #e2e8f0",
-                    borderRadius: 8,
+                    background: "#303030",
+                    border: "1px solid #303030",
+                    borderRadius: 100,
                     padding: "0.75rem",
                     fontSize: "1rem",
+                    "::placeholder": { color: "#e2e8f0" },
+                    color: "white",
                   }}
                 />
                 <div className="mb-3 d-flex">
@@ -768,6 +848,7 @@ function App() {
                       }
                     }}
                   >
+                    <i className="fa fa-qrcode me-2"></i>
                     Generate QR Code
                   </button>
                 </div>
@@ -808,6 +889,7 @@ function App() {
                       }}
                       onClick={handleDownload}
                     >
+                      <i className="fa fa-download me-2"></i>
                       Download as PNG
                     </button>
                   </div>
@@ -825,7 +907,7 @@ function App() {
               }}
             >
               <div className="w-100" style={{ maxWidth: 400 }}>
-                <div className="text-center mb-4">
+                <div className="text-center mb-5">
                   <button
                     className="btn btn-outline-danger"
                     style={{
@@ -835,14 +917,15 @@ function App() {
                     }}
                     onClick={() => setShowDetails(false)}
                   >
+                    <i className="fa fa-eye-slash me-2"></i>
                     Hide Additional Details
                   </button>
                 </div>
                 <h5
-                  style={{ fontWeight: 600, color: "#2d3748" }}
-                  className="mb-4"
+                  style={{ fontWeight: 600, color: "white" }}
+                  className="mb-4 text-center pt-5"
                 >
-                  Additional QR Code Settings
+                  <b>Additional QR Code Settings</b>
                 </h5>
                 {/* <div className="mb-3">
                   <label style={{ fontWeight: 500, color: "#495057" }}>
@@ -881,7 +964,10 @@ function App() {
                   />
                 </div> */}
                 <div className="mb-3">
-                  <label style={{ fontWeight: 500, color: "#495057" }}>
+                  <label
+                    style={{ fontWeight: 500, color: "white" }}
+                    className="pb-2"
+                  >
                     QR Code Style
                   </label>
                   <select
@@ -889,11 +975,12 @@ function App() {
                     value={design}
                     onChange={(e) => setDesign(e.target.value)}
                     style={{
-                      background: "#fff",
-                      border: "1px solid #e2e8f0",
-                      borderRadius: 8,
+                      background: "#303030",
+                      border: "1px solid #303030",
+                      borderRadius: 100,
                       padding: "0.6rem",
                       fontSize: "1rem",
+                      color: "white",
                     }}
                   >
                     <option value="square">Square</option>
@@ -903,16 +990,16 @@ function App() {
                 </div>
                 <div className="container-fluid">
                   <div className="row">
-                    <div className="col-md-12 text-center">
+                    <div className="col-md-12 text-center text-white mt-5">
                       For Feedback/Suggestions email at{" "}
                       <a
                         href="mailto:arorag2577@gmail.com"
                         style={{
-                          color: "#007bff",
+                          color: "white",
                           textDecoration: "underline",
                         }}
                       >
-                        arorag2577@gmail.com
+                        <b>arorag2577@gmail.com</b>
                       </a>
                     </div>
                   </div>
@@ -923,7 +1010,7 @@ function App() {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 }
 
